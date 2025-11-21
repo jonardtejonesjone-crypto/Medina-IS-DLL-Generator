@@ -156,7 +156,7 @@ const App: React.FC = () => {
             <tr>
               <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">Teacher</td>
               <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${data.teacher || ''}</td>
-              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; verticalAlign: middle;">Quarter</td>
+              <td style="15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; verticalAlign: middle;">Quarter</td>
               <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${quarter || ''}</td>
             </tr>
             <tr>
@@ -321,6 +321,23 @@ const App: React.FC = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }, [generatedDll, generateHtmlContent, formData]); // Added formData to dependency array
+
+  // Reusable style object for DLL table cells in JSX preview
+  const dllTableCellBaseStyle: React.CSSProperties = {
+    padding: '5px 8px',
+    border: '1px solid black',
+    verticalAlign: 'top', // Corrected to camelCase
+    textAlign: 'left',
+  };
+
+  const dllTableHeaderStyle: React.CSSProperties = {
+    ...dllTableCellBaseStyle,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    backgroundColor: '#e0e0e0',
+    verticalAlign: 'middle', // Corrected to camelCase
+  };
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -505,25 +522,25 @@ const App: React.FC = () => {
                 <div style={{ width: '85%' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '10pt', tableLayout: 'fixed' }} className="header-table">
                       <tr>
-                          <th colSpan={2} style={{ width: '50%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'center', verticalAlign: 'middle' }}></th>
-                          <th style={{ width: '12%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'center', verticalAlign: 'middle' }}>Grade Level</th>
-                          <td style={{ width: '38%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>{formData.gradeLevel || ''}</td>
+                          <th colSpan={2} style={{ ...dllTableHeaderStyle, width: '50%', height: '25px' }}></th>
+                          <th style={{ ...dllTableHeaderStyle, width: '12%', height: '25px' }}>Grade Level</th>
+                          <td style={{ ...dllTableCellBaseStyle, width: '38%', height: '25px' }}>{formData.gradeLevel || ''}</td>
                       </tr>
                       <tr>
-                          <td style={{ width: '12%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>School</td>
-                          <td style={{ width: '38%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>{generatedDll.school || ''}</td>
-                          <td style={{ width: '12%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>Learning Area</td>
-                          <td style={{ width: '38%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>{generatedDll.learningArea || ''}</td>
+                          <td style={{ ...dllTableCellBaseStyle, width: '12%', height: '25px' }}>School</td>
+                          <td style={{ ...dllTableCellBaseStyle, width: '38%', height: '25px' }}>{generatedDll.school || ''}</td>
+                          <td style={{ ...dllTableCellBaseStyle, width: '12%', height: '25px' }}>Learning Area</td>
+                          <td style={{ ...dllTableCellBaseStyle, width: '38%', height: '25px' }}>{generatedDll.learningArea || ''}</td>
                       </tr>
                       <tr>
-                          <td style={{ width: '12%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>Teacher</td>
-                          <td style={{ width: '38%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>{generatedDll.teacher || ''}</td>
-                          <td style={{ width: '12%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'center', verticalAlign: 'middle' }}>Quarter</td>
-                          <td style={{ width: '38%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>{formData.quarter || ''}</td>
+                          <td style={{ ...dllTableCellBaseStyle, width: '12%', height: '25px' }}>Teacher</td>
+                          <td style={{ ...dllTableCellBaseStyle, width: '38%', height: '25px' }}>{generatedDll.teacher || ''}</td>
+                          <td style={{ ...dllTableCellBaseStyle, width: '12%', height: '25px' }}>Quarter</td>
+                          <td style={{ ...dllTableCellBaseStyle, width: '38%', height: '25px' }}>{formData.quarter || ''}</td>
                       </tr>
                       <tr>
-                          <td style={{ width: '12%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>Teaching Dates and Time</td>
-                          <td colSpan={3} style={{ height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>{generatedDll.teachingDatesAndTime || ''}</td>
+                          <td style={{ ...dllTableCellBaseStyle, width: '12%', height: '25px' }}>Teaching Dates and Time</td>
+                          <td colSpan={3} style={{ ...dllTableCellBaseStyle, height: '25px' }}>{generatedDll.teachingDatesAndTime || ''}</td>
                       </tr>
                   </table>
                 </div>
@@ -533,76 +550,76 @@ const App: React.FC = () => {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '10pt', tableLayout: 'fixed' }} className="objectives-procedures-table">
                   <thead>
                       <tr>
-                          <th style={{ width: '15%' }}>OBJECTIVES/PROCEDURES</th>
-                          <th style={{ width: '17%' }}>MONDAY</th>
-                          <th style={{ width: '17%' }}>TUESDAY</th>
-                          <th style={{ width: '17%' }}>WEDNESDAY</th>
-                          <th style={{ width: '17%' }}>THURSDAY</th>
-                          <th style={{ width: '17%' }}>FRIDAY</th>
+                          <th style={{ ...dllTableHeaderStyle, width: '15%' }}>OBJECTIVES/PROCEDURES</th>
+                          <th style={{ ...dllTableHeaderStyle, width: '17%' }}>MONDAY</th>
+                          <th style={{ ...dllTableHeaderStyle, width: '17%' }}>TUESDAY</th>
+                          <th style={{ ...dllTableHeaderStyle, width: '17%' }}>WEDNESDAY</th>
+                          <th style={{ ...dllTableHeaderStyle, width: '17%' }}>THURSDAY</th>
+                          <th style={{ ...dllTableHeaderStyle, width: '17%' }}>FRIDAY</th>
                       </tr>
                   </thead>
                   <tbody>
                       <tr>
-                          <td style={{ padding: '5px 8px', border: '1px solid black', fontWeight: 'bold' }}>I. OBJECTIVES</td>
-                          <td colSpan={5} style={{ padding: '5px 8px', border: '1px solid black' }}></td>
+                          <td style={{ ...dllTableCellBaseStyle, fontWeight: 'bold' }}>I. OBJECTIVES</td>
+                          <td colSpan={5} style={{ ...dllTableCellBaseStyle }}></td>
                       </tr>
                       <tr>
-                          <td style={{ padding: '5px 8px', border: '1px solid black', paddingLeft: '16px' }}>A. Content Standard</td>
-                          <td colSpan={5} style={{ padding: '5px 8px', border: '1px solid black' }}>{generatedDll.contentStandard || ''}</td>
+                          <td style={{ ...dllTableCellBaseStyle, paddingLeft: '16px' }}>A. Content Standard</td>
+                          <td colSpan={5} style={{ ...dllTableCellBaseStyle }}>{generatedDll.contentStandard || ''}</td>
                       </tr>
                       <tr>
-                          <td style={{ padding: '5px 8px', border: '1px solid black', paddingLeft: '16px' }}>B. Performance Standard</td>
-                          <td colSpan={5} style={{ padding: '5px 8px', border: '1px solid black' }}>{generatedDll.performanceStandard || ''}</td>
+                          <td style={{ ...dllTableCellBaseStyle, paddingLeft: '16px' }}>B. Performance Standard</td>
+                          <td colSpan={5} style={{ ...dllTableCellBaseStyle }}>{generatedDll.performanceStandard || ''}</td>
                       </tr>
                       <tr>
-                          <td style={{ padding: '5px 8px', border: '1px solid black', paddingLeft: '16px' }}>C. Learning Competency (LC Code)</td>
-                          <td colSpan={5} style={{ padding: '5px 8px', border: '1px solid black' }}>{generatedDll.learningCompetency || ''}</td>
+                          <td style={{ ...dllTableCellBaseStyle, paddingLeft: '16px' }}>C. Learning Competency (LC Code)</td>
+                          <td colSpan={5} style={{ ...dllTableCellBaseStyle }}>{generatedDll.learningCompetency || ''}</td>
                       </tr>
                       <tr>
-                          <td style={{ padding: '5px 8px', border: '1px solid black', paddingLeft: '16px' }}>D. Learning Objectives (Weekly)</td>
+                          <td style={{ ...dllTableCellBaseStyle, paddingLeft: '16px' }}>D. Learning Objectives (Weekly)</td>
                           {days.map(day => (
-                            <td key={day} style={{ padding: '5px 8px', border: '1px solid black' }}>
+                            <td key={day} style={{ ...dllTableCellBaseStyle }}>
                               {generatedDll.weeklyLearningObjectives?.[day as keyof DailyLessonLogOutput['weeklyLearningObjectives']] || ''}
                             </td>
                           ))}
                       </tr>
                       <tr>
-                          <td style={{ padding: '5px 8px', border: '1px solid black', fontWeight: 'bold' }}>II. CONTENT (Topic)</td>
+                          <td style={{ ...dllTableCellBaseStyle, fontWeight: 'bold' }}>II. CONTENT (Topic)</td>
                           {days.map(day => (
-                            <td key={day} style={{ padding: '5px 8px', border: '1px solid black' }}>
+                            <td key={day} style={{ ...dllTableCellBaseStyle }}>
                               {generatedDll.contentTopic?.[day as keyof DailyLessonLogOutput['contentTopic']] || ''}
                             </td>
                           ))}
                       </tr>
                       <tr>
-                          <td style={{ padding: '5px 8px', border: '1px solid black', fontWeight: 'bold' }}>III. LEARNING RESOURCES</td>
-                          <td colSpan={5} style={{ padding: '5px 8px', border: '1px solid black' }}></td>
+                          <td style={{ ...dllTableCellBaseStyle, fontWeight: 'bold' }}>III. LEARNING RESOURCES</td>
+                          <td colSpan={5} style={{ ...dllTableCellBaseStyle }}></td>
                       </tr>
                       <tr>
-                          <td style={{ padding: '5px 8px', border: '1px solid black', paddingLeft: '16px' }}>A. References</td>
+                          <td style={{ ...dllTableCellBaseStyle, paddingLeft: '16px' }}>A. References</td>
                           {days.map(day => (
-                            <td key={day} style={{ padding: '5px 8px', border: '1px solid black' }}>
+                            <td key={day} style={{ ...dllTableCellBaseStyle }}>
                               {generatedDll.learningResources?.references?.[day as keyof DailyLessonLogOutput['learningResources']['references']] || ''}
                             </td>
                           ))}
                       </tr>
                       <tr>
-                          <td style={{ padding: '5px 8px', border: '1px solid black', paddingLeft: '16px' }}>B. Other Resources</td>
+                          <td style={{ ...dllTableCellBaseStyle, paddingLeft: '16px' }}>B. Other Resources</td>
                           {days.map(day => (
-                            <td key={day} style={{ padding: '5px 8px', border: '1px solid black' }}>
+                            <td key={day} style={{ ...dllTableCellBaseStyle }}>
                               {generatedDll.learningResources?.otherResources?.[day as keyof DailyLessonLogOutput['learningResources']['otherResources']] || ''}
                             </td>
                           ))}
                       </tr>
                       <tr>
-                          <td style={{ padding: '5px 8px', border: '1px solid black', fontWeight: 'bold' }}>IV. PROCEDURES</td>
-                          <td colSpan={5} style={{ padding: '5px 8px', border: '1px solid black' }}></td>
+                          <td style={{ ...dllTableCellBaseStyle, fontWeight: 'bold' }}>IV. PROCEDURES</td>
+                          <td colSpan={5} style={{ ...dllTableCellBaseStyle }}></td>
                       </tr>
                       {procedureKeys.map((key) => (
                           <tr key={key}>
-                              <td style={{ padding: '5px 8px', border: '1px solid black', paddingLeft: '16px' }}>{procedureLabels[key]}</td>
+                              <td style={{ ...dllTableCellBaseStyle, paddingLeft: '16px' }}>{procedureLabels[key]}</td>
                               {days.map(day => (
-                                <td key={day} style={{ padding: '5px 8px', border: '1px solid black' }}>
+                                <td key={day} style={{ ...dllTableCellBaseStyle }}>
                                   {generatedDll.procedures?.[day as keyof DailyLessonLogOutput['procedures']]?.[key] || ''}
                                 </td>
                               ))}
