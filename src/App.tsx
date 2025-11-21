@@ -133,9 +133,8 @@ const App: React.FC = () => {
   };
 
   const generateHtmlContent = useCallback((data: DailyLessonLogOutput, currentFormData: LessonPlanFormData) => {
-    // Explicitly destructure all variables from formData and generated data to ensure they are in scope.
-    const { gradeLevel, quarter, subject, weeklyContentTopic } = currentFormData;
-    const { contentStandard, performanceStandard, learningCompetency } = data;
+    // Removed destructuring and accessed variables directly from currentFormData and data.
+    // This addresses 'Cannot find name' errors by ensuring variables are correctly scoped.
 
     const headerTableHtml = `
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
@@ -145,19 +144,19 @@ const App: React.FC = () => {
             <tr>
               <th colspan="2" style="width: 50%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; verticalAlign: middle;"></th>
               <th style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; verticalAlign: middle;">Grade Level</th>
-              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${gradeLevel || ''}</td>
+              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${currentFormData.gradeLevel || ''}</td>
             </tr>
             <tr>
               <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">School</td>
               <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${data.school || ''}</td>
-              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">Learning Area</td>
+              <td style="15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">Learning Area</td>
               <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${data.learningArea || ''}</td>
             </tr>
             <tr>
               <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">Teacher</td>
               <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${data.teacher || ''}</td>
-              <td style="15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; verticalAlign: middle;">Quarter</td>
-              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${quarter || ''}</td>
+              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; verticalAlign: middle;">Quarter</td>
+              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${currentFormData.quarter || ''}</td>
             </tr>
             <tr>
               <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">Teaching Dates and Time</td>
@@ -187,15 +186,15 @@ const App: React.FC = () => {
               </tr>
               <tr>
                   <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px;">A. Content Standard</td>
-                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black;">${contentStandard || ''}</td>
+                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black;">${data.contentStandard || ''}</td>
               </tr>
               <tr>
                   <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px;">B. Performance Standard</td>
-                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black;">${performanceStandard || ''}</td>
+                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black;">${data.performanceStandard || ''}</td>
               </tr>
               <tr>
                   <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px;">C. Learning Competency (LC Code)</td>
-                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black;">${learningCompetency || ''}</td>
+                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black;">${data.learningCompetency || ''}</td>
               </tr>
               <tr>
                   <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px;">D. Learning Objectives (Weekly)</td>
@@ -252,7 +251,7 @@ const App: React.FC = () => {
       <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Daily Lesson Log - ${weeklyContentTopic || 'Lesson Log'}</title>
+          <title>Daily Lesson Log - ${currentFormData.weeklyContentTopic || 'Lesson Log'}</title>
           <style>
               body {
                   font-family: Arial, sans-serif;
@@ -307,7 +306,7 @@ const App: React.FC = () => {
 
   const downloadAsWord = useCallback(() => {
     if (!generatedDll) return;
-    // Fix: Pass formData to generateHtmlContent to source user-provided input values
+    // Pass formData to generateHtmlContent to source user-provided input values
     const htmlContent = generateHtmlContent(generatedDll, formData);
     const blob = new Blob([htmlContent], {
       type: 'application/msword',
@@ -553,9 +552,9 @@ const App: React.FC = () => {
                           <th style={{ ...dllTableHeaderStyle, width: '15%' }}>OBJECTIVES/PROCEDURES</th>
                           <th style={{ ...dllTableHeaderStyle, width: '17%' }}>MONDAY</th>
                           <th style={{ ...dllTableHeaderStyle, width: '17%' }}>TUESDAY</th>
-                          <th style={{ ...dllTableHeaderStyle, width: '17%' }}>WEDNESDAY</th>
-                          <th style={{ ...dllTableHeaderStyle, width: '17%' }}>THURSDAY</th>
-                          <th style={{ ...dllTableHeaderStyle, width: '17%' }}>FRIDAY</th>
+                          <th style={{ width: '17%' }}>WEDNESDAY</th>
+                          <th style={{ width: '17%' }}>THURSDAY</th>
+                          <th style={{ width: '17%' }}>FRIDAY</th>
                       </tr>
                   </thead>
                   <tbody>
