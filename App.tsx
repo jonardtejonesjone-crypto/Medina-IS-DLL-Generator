@@ -98,7 +98,7 @@ const App: React.FC = () => {
       setGeneratedDll(parsedOutput);
     } catch (err) {
       console.error('Error during DLL generation:', err);
-      setError(`Failed to generate lesson log: ${(err as Error).message}. Please ensure all required fields are filled and try again.`);
+      setError(`Failed to generate lesson log: ${(err as Error).message}. Please ensure all required fields are filled and again.`);
       setGeneratedDll(null); // Clear previous output on error
     } finally {
       setLoading(false);
@@ -133,14 +133,12 @@ const App: React.FC = () => {
   };
 
   const generateHtmlContent = useCallback((data: DailyLessonLogOutput, currentFormData: LessonPlanFormData) => {
-    // Fix: Replaced destructuring assignment with direct property access to resolve "Cannot find name" errors.
-    // Kept user-provided fields for header display.
+    // These variables are already correctly sourced from currentFormData and data in the HTML structure.
+    // The previous destructuring was incorrect and caused errors.
     const gradeLevel = currentFormData.gradeLevel;
     const quarter = currentFormData.quarter;
     const subject = currentFormData.subject;
     const weeklyContentTopic = currentFormData.weeklyContentTopic;
-    // Removed specific declarations for contentStandard, performanceStandard, weeklyLearningCompetency
-    // as these will be sourced directly from the AI-generated `data` object for display.
 
     const headerTableHtml = `
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
@@ -161,7 +159,7 @@ const App: React.FC = () => {
             <tr>
               <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">Teacher</td>
               <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${data.teacher || ''}</td>
-              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">Quarter</td>
+              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; verticalAlign: middle;">Quarter</td>
               <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${quarter || ''}</td>
             </tr>
             <tr>
