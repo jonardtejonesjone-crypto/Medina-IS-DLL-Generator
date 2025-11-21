@@ -1,23 +1,16 @@
 {
-  "name": "deped-daily-lesson-log-ai-generator",
+  "name": "medina-is-dll-generator",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
   "dependencies": {
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "@google/genai": "^1.30.0",
     "react-markdown": "^10.1.0"
   },
-  "devDependencies": {
-    "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+  "scripts": {
+    "build": "echo 'No traditional build step required for client-side app with import maps, copying files...' && mkdir -p dist && cp -r ./* dist/",
+    "start": "echo 'To run locally, you need a dev server. For this setup, you can use a simple static server like `serve` or `http-server` after running `npm install`.'",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
