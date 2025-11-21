@@ -1,0 +1,5 @@
+{
+  "name": "DepEd Daily Lesson Log AI Generator",
+  "description": "An AI-powered tool to generate Daily Lesson Logs based on DepEd Philippines format, powered by Gemini.",
+  "requestFramePermissions": []
+}
