@@ -133,34 +133,54 @@ const App: React.FC = () => {
   };
 
   const generateHtmlContent = useCallback((data: DailyLessonLogOutput, currentFormData: LessonPlanFormData) => {
-    // Removed destructuring and accessed variables directly from currentFormData and data.
-    // This addresses 'Cannot find name' errors by ensuring variables are correctly scoped.
+    // FIX: Destructure properties from currentFormData and data to ensure they are recognized as local variables,
+    // addressing "Cannot find name" errors reported by the linter/compiler.
+    const {
+      gradeLevel: formDataGradeLevel,
+      quarter: formDataQuarter,
+      subject: formDataSubject,
+      weeklyContentTopic: formDataWeeklyContentTopic,
+    } = currentFormData;
+
+    const {
+      school,
+      teacher,
+      teachingDatesAndTime,
+      learningArea,
+      contentStandard: dllContentStandard,
+      performanceStandard: dllPerformanceStandard,
+      learningCompetency: dllLearningCompetency,
+      weeklyLearningObjectives,
+      contentTopic,
+      learningResources,
+      procedures,
+    } = data;
 
     const headerTableHtml = `
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-        <div style="font-weight: bold; font-size: 10pt; width: 15%; text-align: left; verticalAlign: middle;">K to 10<br>DAILY LESSON LOG</div>
+        <div style="font-weight: bold; font-size: 10pt; width: 15%; text-align: left; vertical-align: middle;">K to 10<br>DAILY LESSON LOG</div>
         <div style="width: 85%;">
           <table style="width: 100%; border-collapse: collapse; font-size: 8pt; table-layout: fixed;" class="header-table">
             <tr>
-              <th colspan="2" style="width: 50%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; verticalAlign: middle;"></th>
-              <th style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; verticalAlign: middle;">Grade Level</th>
-              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${currentFormData.gradeLevel || ''}</td>
+              <th colspan="2" style="width: 50%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; vertical-align: middle;"></th>
+              <th style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; vertical-align: middle;">Grade Level</th>
+              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">${formDataGradeLevel || ''}</td>
             </tr>
             <tr>
-              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">School</td>
-              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${data.school || ''}</td>
-              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">Learning Area</td>
-              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${data.learningArea || ''}</td>
+              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">School</td>
+              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">${school || ''}</td>
+              <td style="15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">Learning Area</td>
+              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">${learningArea || ''}</td>
             </tr>
             <tr>
-              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">Teacher</td>
-              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${data.teacher || ''}</td>
-              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; verticalAlign: middle;">Quarter</td>
-              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${currentFormData.quarter || ''}</td>
+              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">Teacher</td>
+              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">${teacher || ''}</td>
+              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; vertical-align: middle;">Quarter</td>
+              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">${formDataQuarter || ''}</td>
             </tr>
             <tr>
-              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">Teaching Dates and Time</td>
-              <td colspan="3" style="height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; verticalAlign: middle;">${data.teachingDatesAndTime || ''}</td>
+              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">Teaching Dates and Time</td>
+              <td colspan="3" style="height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">${teachingDatesAndTime || ''}</td>
             </tr>
           </table>
         </div>
@@ -171,59 +191,59 @@ const App: React.FC = () => {
       <table style="width: 100%; border-collapse: collapse; font-size: 8pt; table-layout: fixed;" class="objectives-procedures-table">
           <thead>
               <tr>
-                  <th style="width: 15%;">OBJECTIVES/PROCEDURES</th>
-                  <th style="width: 17%;">MONDAY</th>
-                  <th style="width: 17%;">TUESDAY</th>
-                  <th style="17%;">WEDNESDAY</th>
-                  <th style="width: 17%;">THURSDAY</th>
-                  <th style="width: 17%;">FRIDAY</th>
+                  <th style="width: 15%; vertical-align: middle;">OBJECTIVES/PROCEDURES</th>
+                  <th style="width: 17%; vertical-align: middle;">MONDAY</th>
+                  <th style="width: 17%; vertical-align: middle;">TUESDAY</th>
+                  <th style="width: 17%; vertical-align: middle;">WEDNESDAY</th>
+                  <th style="width: 17%; vertical-align: middle;">THURSDAY</th>
+                  <th style="width: 17%; vertical-align: middle;">FRIDAY</th>
               </tr>
           </thead>
           <tbody>
               <tr>
-                  <td style="padding: 2px 4px; border: 1px solid black; font-weight: bold;">I. OBJECTIVES</td>
-                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black;"></td>
+                  <td style="padding: 2px 4px; border: 1px solid black; font-weight: bold; vertical-align: top;">I. OBJECTIVES</td>
+                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black; vertical-align: top;"></td>
               </tr>
               <tr>
-                  <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px;">A. Content Standard</td>
-                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black;">${data.contentStandard || ''}</td>
+                  <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px; vertical-align: top;">A. Content Standard</td>
+                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black; vertical-align: top;">${dllContentStandard || ''}</td>
               </tr>
               <tr>
-                  <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px;">B. Performance Standard</td>
-                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black;">${data.performanceStandard || ''}</td>
+                  <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px; vertical-align: top;">B. Performance Standard</td>
+                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black; vertical-align: top;">${dllPerformanceStandard || ''}</td>
               </tr>
               <tr>
-                  <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px;">C. Learning Competency (LC Code)</td>
-                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black;">${data.learningCompetency || ''}</td>
+                  <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px; vertical-align: top;">C. Learning Competency (LC Code)</td>
+                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black; vertical-align: top;">${dllLearningCompetency || ''}</td>
               </tr>
               <tr>
-                  <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px;">D. Learning Objectives (Weekly)</td>
-                  ${days.map(day => `<td style="padding: 2px 4px; border: 1px solid black;">${data.weeklyLearningObjectives?.[day as keyof DailyLessonLogOutput['weeklyLearningObjectives']] || ''}</td>`).join('')}
+                  <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px; vertical-align: top;">D. Learning Objectives (Weekly)</td>
+                  ${days.map(day => `<td style="padding: 2px 4px; border: 1px solid black; vertical-align: top;">${weeklyLearningObjectives?.[day as keyof DailyLessonLogOutput['weeklyLearningObjectives']] || ''}</td>`).join('')}
               </tr>
               <tr>
-                  <td style="padding: 2px 4px; border: 1px solid black; font-weight: bold;">II. CONTENT (Topic)</td>
-                  ${days.map(day => `<td style="padding: 2px 4px; border: 1px solid black;">${data.contentTopic?.[day as keyof DailyLessonLogOutput['contentTopic']] || ''}</td>`).join('')}
+                  <td style="padding: 2px 4px; border: 1px solid black; font-weight: bold; vertical-align: top;">II. CONTENT (Topic)</td>
+                  ${days.map(day => `<td style="padding: 2px 4px; border: 1px solid black; vertical-align: top;">${contentTopic?.[day as keyof DailyLessonLogOutput['contentTopic']] || ''}</td>`).join('')}
               </tr>
               <tr>
-                  <td style="padding: 2px 4px; border: 1px solid black; font-weight: bold;">III. LEARNING RESOURCES</td>
-                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black;"></td>
+                  <td style="padding: 2px 4px; border: 1px solid black; font-weight: bold; vertical-align: top;">III. LEARNING RESOURCES</td>
+                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black; vertical-align: top;"></td>
               </tr>
               <tr>
-                  <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px;">A. References</td>
-                  ${days.map(day => `<td style="padding: 2px 4px; border: 1px solid black;">${data.learningResources?.references?.[day as keyof DailyLessonLogOutput['learningResources']['references']] || ''}</td>`).join('')}
+                  <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px; vertical-align: top;">A. References</td>
+                  ${days.map(day => `<td style="padding: 2px 4px; border: 1px solid black; vertical-align: top;">${learningResources?.references?.[day as keyof DailyLessonLogOutput['learningResources']['references']] || ''}</td>`).join('')}
               </tr>
               <tr>
-                  <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px;">B. Other Resources</td>
-                  ${days.map(day => `<td style="padding: 2px 4px; border: 1px solid black;">${data.learningResources?.otherResources?.[day as keyof DailyLessonLogOutput['learningResources']['otherResources']] || ''}</td>`).join('')}
+                  <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px; vertical-align: top;">B. Other Resources</td>
+                  ${days.map(day => `<td style="padding: 2px 4px; border: 1px solid black; vertical-align: top;">${learningResources?.otherResources?.[day as keyof DailyLessonLogOutput['learningResources']['otherResources']] || ''}</td>`).join('')}
               </tr>
               <tr>
-                  <td style="padding: 2px 4px; border: 1px solid black; font-weight: bold;">IV. PROCEDURES</td>
-                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black;"></td>
+                  <td style="padding: 2px 4px; border: 1px solid black; font-weight: bold; vertical-align: top;">IV. PROCEDURES</td>
+                  <td colspan="5" style="padding: 2px 4px; border: 1px solid black; vertical-align: top;"></td>
               </tr>
               ${procedureKeys.map(key => `
                   <tr>
-                      <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px;">${procedureLabels[key]}</td>
-                      ${days.map(day => `<td style="padding: 2px 4px; border: 1px solid black;">${data.procedures?.[day as keyof DailyLessonLogOutput['procedures']]?.[key] || ''}</td>`).join('')}
+                      <td style="padding: 2px 4px; border: 1px solid black; padding-left: 8px; vertical-align: top;">${procedureLabels[key]}</td>
+                      ${days.map(day => `<td style="padding: 2px 4px; border: 1px solid black; vertical-align: top;">${procedures?.[day as keyof DailyLessonLogOutput['procedures']]?.[key] || ''}</td>`).join('')}
                   </tr>
               `).join('')}
           </tbody>
@@ -234,7 +254,7 @@ const App: React.FC = () => {
       <div style="display: flex; justify-content: space-between; align-items: flex-end; font-size: 8pt; margin-top: 20px; padding: 5px;">
         <div style="display: flex; flex-direction: column;">
           <span>Prepared by:</span>
-          <span style="margin-top: 10px; border-bottom: 1px solid black; padding: 0 20px; text-align: center; font-weight: bold;">${data.teacher || ''}</span>
+          <span style="margin-top: 10px; border-bottom: 1px solid black; padding: 0 20px; text-align: center; font-weight: bold;">${teacher || ''}</span>
           <span style="text-align: center;">Teacher</span>
         </div>
         <div style="display: flex; flex-direction: column;">
@@ -251,7 +271,7 @@ const App: React.FC = () => {
       <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Daily Lesson Log - ${currentFormData.weeklyContentTopic || 'Lesson Log'}</title>
+          <title>Daily Lesson Log - ${formDataWeeklyContentTopic || 'Lesson Log'}</title>
           <style>
               body {
                   font-family: Arial, sans-serif;
@@ -323,9 +343,12 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
-      <h1 className="text-4xl font-extrabold text-center text-blue-800 mb-8">
+      <h1 className="text-4xl font-extrabold text-center text-blue-800 mb-2"> {/* Changed mb-8 to mb-2 for spacing */}
         Medina IS Daily Lesson Log Generator
       </h1>
+      <p className="text-sm text-gray-600 text-center mb-8"> {/* New line added */}
+        Powered by Gemini 2.5 Flash | Created by: Jonard T. Tejones
+      </p>
 
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
