@@ -7,6 +7,7 @@ import { LessonPlanFormData, DailyLessonLogOutput, DayProcedures } from './types
 import { generateLessonLog } from './services/geminiService';
 
 const App: React.FC = () => {
+  const [apiKey, setApiKey] = useState<string>(''); // New state for API key
   const [formData, setFormData] = useState<LessonPlanFormData>({
     gradeLevel: '',
     quarter: '',
@@ -33,10 +34,15 @@ const App: React.FC = () => {
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    // Special handling for API key
+    if (name === 'apiKey') {
+      setApiKey(value);
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   }, []);
 
   const constructPrompt = useCallback((data: LessonPlanFormData): string => {
@@ -89,21 +95,27 @@ const App: React.FC = () => {
     setError(null);
     setGeneratedDll(null);
 
+    if (!apiKey) {
+      setError("Please enter your Gemini API Key before generating the lesson log.");
+      setLoading(false);
+      return;
+    }
+
     const prompt = constructPrompt(formData);
 
     try {
       // Use 'gemini-2.5-flash' as the default model for text tasks
-      const response = await generateLessonLog({ model: 'gemini-2.5-flash', prompt });
+      const response = await generateLessonLog({ model: 'gemini-2.5-flash', prompt }, apiKey); // Pass API key
       const parsedOutput: DailyLessonLogOutput = JSON.parse(response.text);
       setGeneratedDll(parsedOutput);
     } catch (err) {
       console.error('Error during DLL generation:', err);
-      setError(`Failed to generate lesson log: ${(err as Error).message}. Please ensure all required fields are filled and again.`);
+      setError(`Failed to generate lesson log: ${(err as Error).message}. Please ensure all required fields are filled and a valid API key is provided.`);
       setGeneratedDll(null); // Clear previous output on error
     } finally {
       setLoading(false);
     }
-  }, [formData, constructPrompt]);
+  }, [formData, constructPrompt, apiKey]); // Added apiKey to dependency array
 
   const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
   const procedureKeys: (keyof DayProcedures)[] = [
@@ -341,6 +353,23 @@ const App: React.FC = () => {
     URL.revokeObjectURL(url);
   }, [generatedDll, generateHtmlContent, formData]); // Added formData to dependency array
 
+  // Reusable style object for DLL table cells in JSX preview
+  const dllTableCellBaseStyle: React.CSSProperties = {
+    padding: '5px 8px',
+    border: '1px solid black',
+    verticalAlign: 'top', // Corrected to camelCase
+    textAlign: 'left',
+  };
+
+  const dllTableHeaderStyle: React.CSSProperties = {
+    ...dllTableCellBaseStyle,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    backgroundColor: '#e0e0e0',
+    verticalAlign: 'middle', // Corrected to camelCase
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <h1 className="text-4xl font-extrabold text-center text-blue-800 mb-2"> {/* Changed mb-8 to mb-2 for spacing */}
@@ -351,6 +380,18 @@ const App: React.FC = () => {
       </p>
 
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-8">
+        <div className="mb-6">
+          <FormInput
+            id="apiKey"
+            label="Gemini API Key"
+            value={apiKey}
+            onChange={handleChange}
+            placeholder="Enter your Gemini API Key"
+            required
+            className="col-span-full"
+          />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <FormSelect
             id="gradeLevel"
@@ -535,6 +576,7 @@ const App: React.FC = () => {
                           <td style={{ width: '12%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>School</td>
                           <td style={{ width: '38%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>{generatedDll.school || ''}</td>
                           <td style={{ width: '12%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>Learning Area</td>
+                          {/* Corrected vertical-align to verticalAlign */}
                           <td style={{ width: '38%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>{generatedDll.learningArea || ''}</td>
                       </tr>
                       <tr>

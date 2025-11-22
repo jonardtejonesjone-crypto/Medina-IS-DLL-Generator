@@ -2,13 +2,14 @@ import { GoogleGenAI } from "@google/genai";
 import { GenerationRequest, GenerationResponse, DailyLessonLogOutputSchema } from "../types";
 
 export const generateLessonLog = async (
-  request: GenerationRequest
+  request: GenerationRequest,
+  apiKey: string // Accept API key as a parameter
 ): Promise<GenerationResponse> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API_KEY is not defined in the environment variables.");
+  if (!apiKey) {
+    throw new Error("API Key is required to generate the lesson log.");
   }
 
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: apiKey });
 
   try {
     const response = await ai.models.generateContent({

@@ -205,6 +205,7 @@ export const DailyLessonLogOutputSchema = {
 export interface GenerationRequest {
   model: string;
   prompt: string;
+  apiKey?: string; // Made optional as it will be passed explicitly
 }
 
 export interface GenerationResponse {

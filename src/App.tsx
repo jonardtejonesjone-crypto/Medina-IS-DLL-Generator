@@ -7,6 +7,7 @@ import { LessonPlanFormData, DailyLessonLogOutput, DayProcedures } from './types
 import { generateLessonLog } from './services/geminiService';
 
 const App: React.FC = () => {
+  const [apiKey, setApiKey] = useState<string>(''); // New state for API key
   const [formData, setFormData] = useState<LessonPlanFormData>({
     gradeLevel: '',
     quarter: '',
@@ -33,10 +34,15 @@ const App: React.FC = () => {
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    // Special handling for API key
+    if (name === 'apiKey') {
+      setApiKey(value);
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   }, []);
 
   const constructPrompt = useCallback((data: LessonPlanFormData): string => {
@@ -89,21 +95,27 @@ const App: React.FC = () => {
     setError(null);
     setGeneratedDll(null);
 
+    if (!apiKey) {
+      setError("Please enter your Gemini API Key before generating the lesson log.");
+      setLoading(false);
+      return;
+    }
+
     const prompt = constructPrompt(formData);
 
     try {
       // Use 'gemini-2.5-flash' as the default model for text tasks
-      const response = await generateLessonLog({ model: 'gemini-2.5-flash', prompt });
+      const response = await generateLessonLog({ model: 'gemini-2.5-flash', prompt }, apiKey); // Pass API key
       const parsedOutput: DailyLessonLogOutput = JSON.parse(response.text);
       setGeneratedDll(parsedOutput);
     } catch (err) {
       console.error('Error during DLL generation:', err);
-      setError(`Failed to generate lesson log: ${(err as Error).message}. Please ensure all required fields are filled and again.`);
+      setError(`Failed to generate lesson log: ${(err as Error).message}. Please ensure all required fields are filled and a valid API key is provided.`);
       setGeneratedDll(null); // Clear previous output on error
     } finally {
       setLoading(false);
     }
-  }, [formData, constructPrompt]);
+  }, [formData, constructPrompt, apiKey]); // Added apiKey to dependency array
 
   const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
   const procedureKeys: (keyof DayProcedures)[] = [
@@ -174,12 +186,12 @@ const App: React.FC = () => {
             </tr>
             <tr>
               <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">Teacher</td>
-              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">${teacher || ''}</td>
-              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; vertical-align: middle;">Quarter</td>
-              <td style="width: 35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">${formDataQuarter || ''}</td>
+              <td style="35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">${teacher || ''}</td>
+              <td style="15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: center; vertical-align: middle;">Quarter</td>
+              <td style="35%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">${formDataQuarter || ''}</td>
             </tr>
             <tr>
-              <td style="width: 15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">Teaching Dates and Time</td>
+              <td style="15%; height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">Teaching Dates and Time</td>
               <td colspan="3" style="height: 20px; border: 1px solid black; padding: 2px 4px; text-align: left; vertical-align: middle;">${teachingDatesAndTime || ''}</td>
             </tr>
           </table>
@@ -368,6 +380,18 @@ const App: React.FC = () => {
       </p>
 
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-8">
+        <div className="mb-6">
+          <FormInput
+            id="apiKey"
+            label="Gemini API Key"
+            value={apiKey}
+            onChange={handleChange}
+            placeholder="Enter your Gemini API Key"
+            required
+            className="col-span-full"
+          />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <FormSelect
             id="gradeLevel"
@@ -552,6 +576,7 @@ const App: React.FC = () => {
                           <td style={{ width: '12%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>School</td>
                           <td style={{ width: '38%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>{generatedDll.school || ''}</td>
                           <td style={{ width: '12%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>Learning Area</td>
+                          {/* Corrected vertical-align to verticalAlign */}
                           <td style={{ width: '38%', height: '25px', border: '1px solid black', padding: '5px 8px', textAlign: 'left', verticalAlign: 'middle' }}>{generatedDll.learningArea || ''}</td>
                       </tr>
                       <tr>
